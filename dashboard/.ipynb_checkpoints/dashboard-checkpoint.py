@@ -4,12 +4,8 @@ import altair as alt
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns  
-import locale
 import matplotlib.ticker as ticker
 
-
-# Set locale untuk format angka
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # Fungsi untuk memformat ID pelanggan
 def format_customer_id(customer_id):
@@ -73,8 +69,9 @@ def top_product_category_by_state(df):
 
 # Fungsi untuk memformat angka sebagai mata uang
 def format_currency(amount):
-    """Format angka sebagai mata uang menggunakan locale."""
-    return locale.currency(amount, grouping=True)
+    """Format angka sebagai mata uang USD."""
+    # Menggunakan format string untuk menambahkan koma sebagai pemisah ribuan
+    return f"${amount:,.2f}"  # Menampilkan dua desimal untuk Dolar
 
 
 # Main program
@@ -105,7 +102,6 @@ customer_category_counts = categorize_customers(df_filtered)
 
 # Tampilan Aplikasi Streamlit
 st.title("Dashboard Analisis Data E-commerce")
-
 # Metrik Pesanan Harian
 st.subheader("Analisis Penjualan Harian")
 col1, col2 = st.columns(2)
@@ -116,8 +112,9 @@ with col1:
 
 with col2:
     total_revenue = daily_orders_df.revenue.sum()
-    formatted_revenue = locale.currency(total_revenue, grouping=True)
+    formatted_revenue = format_currency(total_revenue)  # Dengan ini
     st.metric("Total Pendapatan", value=formatted_revenue)
+
 
 # Plotting pendapatan pesanan harian
 fig, ax = plt.subplots(figsize=(16, 8))
